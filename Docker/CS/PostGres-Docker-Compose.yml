@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:11-bullseye
+    build:
+      context: ./Docker
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - /opt/docker/postgres/11/data:/var/lib/postgresqlnit.sql
+      - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh
+    ports:
+      - "5432:5432"

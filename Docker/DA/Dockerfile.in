@@ -1,0 +1,69 @@
+FROM @base_docker_image@
+
+RUN yum install -y vim 
+RUN yum install -y which 
+RUN yum install -y dos2unix
+RUN yum install -y "perl(XML::LibXML)" 
+RUN yum install -y cpanminus
+RUN ["cpanm", "Log::Log4perl" ]
+RUN rm -rf /usr/share/doc/perl-IO-Socket-SSL/certs/*.pem
+RUN rm -rf /usr/share/doc/perl-IO-Socket-SSL/certs/*.enc
+RUN rm -rf /usr/share/doc/perl-Net-SSLeay/examples/*.pem
+RUN rm -rf /usr/share/doc/perl-Net-SSLeay/examples/*.enc
+
+RUN groupadd -g 2001 @da_user_name@ && \
+    useradd -r -u 1001 -g @da_user_name@ @da_user_name@ && \
+    yum install -y passwd && \
+    echo "@da_user_password@" | passwd --stdin @da_user_name@ && \
+    mkdir /home/@da_user_name@ && \
+    chown @da_user_name@:@da_user_name@ /home/@da_user_name@ && \
+	mkdir -p /opt/dctm/apptoken && \
+    chown -R @da_user_name@:@da_user_name@ /opt
+
+USER @da_user_name@
+ENV HOME /home/@da_user_name@
+
+RUN mkdir -p /home/@da_user_name@/newrelic/logs
+RUN mkdir -p /opt/tomcat/logs
+RUN mkdir -p /home/@da_user_name@/documentum/logs
+
+COPY --chown=@da_user_name@:@da_user_name@ ./encryptPasswordUpdate.pl /home/@da_user_name@/encryptPasswordUpdate.pl
+COPY --chown=@da_user_name@:@da_user_name@ ./updateAppXml.pl /home/@da_user_name@/updateAppXml.pl
+COPY --chown=@da_user_name@:@da_user_name@ ./updateDfcProperties.pl /home/@da_user_name@/updateDfcProperties.pl
+COPY --chown=@da_user_name@:@da_user_name@ ./updateOtdsProperties.pl /home/@da_user_name@/updateOtdsProperties.pl
+COPY --chown=@da_user_name@:@da_user_name@ ./updateLog4j2Properties.pl /home/@da_user_name@/updateLog4j2Properties.pl
+COPY --chown=@da_user_name@:@da_user_name@ ./app.properties /home/@da_user_name@/app.properties
+COPY --chown=@da_user_name@:@da_user_name@ ./otdsoauth.properties /home/@da_user_name@/otdsoauth.properties
+COPY --chown=@da_user_name@:@da_user_name@ ./log4perl.properties /home/@da_user_name@/log4perl.properties
+COPY --chown=@da_user_name@:@da_user_name@ ./start.sh /home/@da_user_name@/start.sh
+COPY --chown=@da_user_name@:@da_user_name@ ./volmon.sh /home/@da_user_name@/volmon.sh
+COPY --chown=@da_user_name@:@da_user_name@ ./log4j2.properties /home/@da_user_name@/log4j2.properties
+COPY --chown=@da_user_name@:@da_user_name@ ./administrator_language_pack_japanese_ja_jp.zip /home/@da_user_name@/administrator_language_pack_japanese_ja_jp.zip
+COPY --chown=@da_user_name@:@da_user_name@ ./newrelic.jar /home/@da_user_name@/newrelic/newrelic.jar
+COPY --chown=@da_user_name@:@da_user_name@ ./newrelic.yml /home/@da_user_name@/newrelic/newrelic.yml
+
+RUN cd /home/@da_user_name@ && \
+    wget -r -nd @ftp_binary_da@	&& \
+	chmod -R u+rwx /home/@da_user_name@
+
+RUN sed -i -e 's/<servlet-class>org.apache.jasper.servlet.JspServlet<\/servlet-class>/<servlet-class>org.apache.jasper.servlet.JspServlet<\/servlet-class>\n\t<init-param>\n\t\t<param-name>enablePooling<\/param-name>\n\t\t<param-value>false<\/param-value>\n\t<\/init-param>/' $CATALINA_HOME/conf/web.xml && \
+    sed -i -e 's/<Context>/<Context useHttpOnly=\"true\">/' $CATALINA_HOME/conf/context.xml && \
+    echo "org.apache.jasper.compiler.Parser.STRICT_WHITESPACE=false" >> $CATALINA_HOME/conf/catalina.properties
+		   
+RUN mkdir $CATALINA_HOME/webapps/da && \
+	unzip /home/@da_user_name@/da.war -d $CATALINA_HOME/webapps/da && \
+	unzip /home/@da_user_name@/administrator_language_pack_japanese_ja_jp.zip -d $CATALINA_HOME/webapps/da && \
+	rm -rf /home/@da_user_name@/da.war && \
+	rm -rf /home/@da_user_name@/administrator_language_pack_japanese_ja_jp.zip && \
+    mkdir -p $CATALINA_HOME/webapps/da/external-configurations
+	
+RUN sed -i -e 's/<compression_filter_enabled>true<\/compression_filter_enabled>/<compression_filter_enabled>false<\/compression_filter_enabled>/' $CATALINA_HOME/webapps/da/wdk/app.xml
+
+ENV TERM=xterm
+	  
+# Expose port for external hosts
+EXPOSE 8080 8443
+
+WORKDIR /home/@da_user_name@
+
+CMD ["/bin/bash", "/home/@da_user_name@/start.sh"]

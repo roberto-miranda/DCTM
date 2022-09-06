@@ -33,4 +33,3 @@ chmod +x DCTM/install.sh
 
 Uso:
 Ejecutar ./DCTM/install.sh y seguir el asistente
-

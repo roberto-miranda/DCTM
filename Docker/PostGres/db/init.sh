@@ -1,2 +1,2 @@
 #!/bin/bash
-mkdir -pv /var/lib/postgresql/data/db_rep222_dat.dat
+mkdir -pv /var/lib/postgresql/data/db_REP_dat.dat

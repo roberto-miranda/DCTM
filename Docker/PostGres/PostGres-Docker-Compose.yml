@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:11-bullseye
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - dctm_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    container_name:
+          "dctm_postgres_11"
+volumes:
+  dctm_pgdata:
+    external: false
+networks:
+  default:
+    external:
+      name: documentum

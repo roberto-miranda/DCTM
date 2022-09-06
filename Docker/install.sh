@@ -11,7 +11,6 @@ export AEK_PASSPHRASE=
 export IP=$IP
 
 
-echo "El nombre del repositorio sera: ${REP}"
 while [ $SALIR -eq 0 ]; do
    echo "Menu:"
    echo "1) Instalar Documentum en Docker"

@@ -14,9 +14,10 @@ export IP=$IP
 while [ $SALIR -eq 0 ]; do
    echo "Menu:"
    echo "1) Instalar Documentum en Docker"
-   echo "2) Redesplegar Documentum Administrator"
-   echo "3) Desinstalar Contenedores DCTM"
-   echo "4) Salir"
+   echo "2) Instalar/reinstalar Documentum Administrator"
+   echo "3) Instalar/reinstalar Documentum Foundation Services"
+   echo "9) Desinstalar Contenedores DCTM"
+   echo "0) Salir"
    echo "Opcion seleccionada: "
    read OPCION
    case $OPCION in
@@ -38,10 +39,10 @@ while [ $SALIR -eq 0 ]; do
             echo "ej: 192.168.0.1"
             read IP
             echo "El valor introducido es: $IP"
-
+            export $IP
             echo "Introduce la password del root"
             read ROOT_PASSWORD
-
+            export $ROOT_PASSWORD
             echo "¿Desea instalar Documentum Administrator?"
             echo "s/n"
             read DA
@@ -74,12 +75,13 @@ while [ $SALIR -eq 0 ]; do
             if [ "$DA" = "s" ];
                 then
                 echo "Desplegando el contenedor de DA $version"
-            docker-compose -f ./DA/statelessda_compose.yml up -d
+                docker-compose -f ./DA/statelessda_compose.yml up -d
             fi
 
             if [ "$DFS" = "s" ];
                 then
                 echo "Desplegando el contenedor de DFS $version"
+                docker-compose -f ./DFS/dfs_compose.yml up -d
             fi
             if [ "$XPLORE" = "s" ];
                 then
@@ -90,6 +92,7 @@ while [ $SALIR -eq 0 ]; do
                 echo "Desplegando el contenedor de D2 $version"
             fi
            ;;
+
        2)
             echo "########################################"
             echo "Redesplegar Documentum Administrator"
@@ -112,6 +115,28 @@ while [ $SALIR -eq 0 ]; do
             docker-compose -f ./DA/statelessda_compose.yml up -d
        ;;
        3)
+            echo "Desplegando el contenedor de DFS $version"
+            echo "Login en opentext..."
+            docker login registry.opentext.com
+            # Script para instalacion de DOCUMENTUM en sus versiones
+            echo "¿Que versión de DFS desea instalar?"
+            echo "ej: 22.2.0"
+            read version
+            export VERSION=$version
+            export VER=`echo $version|sed 's/\.//g'`
+             echo "El valor introducido es: $version"
+            echo "¿Cual es la IP de su maquina?"
+            echo "ej: 192.168.0.1"
+            read IP
+            echo "El valor introducido es: $IP"
+            export $IP
+            echo "¿Cual es nombre de la Docbase?"
+            read DOCBASE
+            echo "El valor introducido es: $DOCBASE"
+            export $DOCBASE
+            docker-compose -f ./DFS/dfs_compose.yml up -d
+       ;;
+       9)
             echo "########################################"
             echo "Desinstalar Contenedores DCTM seleccionado"
             echo "########################################"
@@ -148,7 +173,7 @@ while [ $SALIR -eq 0 ]; do
             exit;
             fi
         ;;
-       4)
+       0)
            SALIR=1 ;;
        *)
          echo "Opcion erronea";;

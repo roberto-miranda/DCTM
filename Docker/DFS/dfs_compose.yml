@@ -1,0 +1,29 @@
+version: '2'
+services:
+  dfshost: 
+    image: registry.opentext.com/dctm-dfs:${VERSION}
+    environment:
+      - DOCBASE_NAME=${DOCBASE}
+      - BOF_REGISTRY_USER_PASSWORD=dmadmin
+      - DOCBROKER_HOST=${IP}
+      - DOCBROKER_PORT=1489
+      - SECURE_CONNECT_MODE=try_native_first
+      - DFC_DATA_DIR=/var/documentum
+    hostname:
+     "centos7"
+    container_name:
+     "dctm_dfs_${VER}"
+    ports:
+     - "8084:8080"
+     - "8446:8443"
+    volumes:
+     - dfshost_logs:/opt/tomcat/logs
+     - dfshost_conf:/opt/tomcat/CustomConf
+    privileged: true
+volumes:
+ dfshost_logs:
+ dfshost_conf:
+networks:
+  default:
+    external:
+      name: documentum

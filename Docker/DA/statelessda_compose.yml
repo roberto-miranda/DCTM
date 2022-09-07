@@ -17,7 +17,7 @@ services:
     volumes:
      - dctm_da-ext-conf:/opt/tomcat/webapps/da/external-configurations    
      - dctm_da-tomcat-logs:/opt/tomcat/logs
-     - dctm_da-documentum-logs:/home/daadmin/documentum/logs
+     - dctm_da-documentum-logs:/home/dmadmin/documentum/logs
      - dctm_da-custom:/opt/tomcat/webapps/da/custom
      - dctm_da-certificate:/opt/dctm/certificate
     privileged: true

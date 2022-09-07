@@ -128,16 +128,16 @@ while [ $SALIR -eq 0 ]; do
             read version
             export VERSION=$version
             export VER=`echo $version|sed 's/\.//g'`
-             echo "El valor introducido es: $version"
+            echo "El valor introducido es: $version"
             echo "¿Cual es la IP de su maquina?"
             echo "ej: 192.168.0.1"
             read IP
             echo "El valor introducido es: $IP"
             export IP=$IP
             echo "¿Cual es nombre de la Docbase?"
-            read DOCBASE
-            echo "El valor introducido es: $DOCBASE"
-            export DOCBASE=$DOCBASE
+            read REP
+            echo "El valor introducido es: $REP"
+            export REP=$REP
 
             docker-compose -f ./DFS/dfs_compose.yml up -d
        ;;

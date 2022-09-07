@@ -3,7 +3,7 @@ services:
   dfshost: 
     image: registry.opentext.com/dctm-dfs:${VERSION}
     environment:
-      - DOCBASE_NAME=${DOCBASE}
+      - DOCBASE_NAME=${REP}
       - BOF_REGISTRY_USER_PASSWORD=dmadmin
       - DOCBROKER_HOST=${IP}
       - DOCBROKER_PORT=1489

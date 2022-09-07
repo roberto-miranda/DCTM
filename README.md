@@ -37,3 +37,16 @@ chmod +x DCTM/install.sh
 
 **Uso:**
 Ejecutar ./DCTM/install.sh y seguir el asistente
+
+Instalaciones probadas:
+
+CS 22.2.0
+DA 22.2.0
+DFS 22.2.0
+
+CS 22.1.0
+DA 22.1.0
+
+CS 21.1.0
+DA 21.1.0 NO FUNCIONA - Redesplegar v22.2.0
+ 

@@ -39,10 +39,10 @@ while [ $SALIR -eq 0 ]; do
             echo "ej: 192.168.0.1"
             read IP
             echo "El valor introducido es: $IP"
-            export $IP
+            export IP=$IP
             echo "Introduce la password del root"
             read ROOT_PASSWORD
-            export $ROOT_PASSWORD
+            export ROOT_PASSWORD=$ROOT_PASSWORD
             echo "¿Desea instalar Documentum Administrator?"
             echo "s/n"
             read DA
@@ -100,17 +100,21 @@ while [ $SALIR -eq 0 ]; do
             echo "Login en opentext..."
             docker login registry.opentext.com
             # Script para instalacion de DOCUMENTUM en sus versiones
-            echo "¿Que versión de CS desea instalar?"
+            echo "¿Que versión de DA desea instalar?"
             echo "ej: 22.2.0"
             read version
             export VERSION=$version
             export VER=`echo $version|sed 's/\.//g'`
-            export REP=rep${VER}
             echo "El valor introducido es: $version"
             echo "¿Cual es la IP de su maquina?"
             echo "ej: 192.168.0.1"
             read IP
             echo "El valor introducido es: $IP"
+            export IP=$IP
+            echo "¿Cual es nombre de la Docbase?"
+            read REP
+            echo "El valor introducido es: $REP"
+            export REP=$REP
 
             docker-compose -f ./DA/statelessda_compose.yml up -d
        ;;
@@ -129,11 +133,12 @@ while [ $SALIR -eq 0 ]; do
             echo "ej: 192.168.0.1"
             read IP
             echo "El valor introducido es: $IP"
-            export $IP
+            export IP=$IP
             echo "¿Cual es nombre de la Docbase?"
             read DOCBASE
             echo "El valor introducido es: $DOCBASE"
-            export $DOCBASE
+            export DOCBASE=$DOCBASE
+
             docker-compose -f ./DFS/dfs_compose.yml up -d
        ;;
        9)
@@ -174,8 +179,11 @@ while [ $SALIR -eq 0 ]; do
             fi
         ;;
        0)
-           SALIR=1 ;;
+           SALIR=0
+            exit
+            ;;
        *)
          echo "Opcion erronea";;
+
        esac
 done

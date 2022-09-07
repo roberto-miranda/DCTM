@@ -48,6 +48,9 @@ CS 22.1.0
 DA 22.1.0
 
 CS 21.1.0
-DA 21.1.0 NO FUNCIONA - Redesplegar v22.2.0
+DA 21.1.0 NO FUNCIONA - Redesplegar DA v21.2.0 - v22.2.0
 DFS 21.1.0
  
+CS 21.2.0
+DA 21.2.0
+DFS 21.2.0

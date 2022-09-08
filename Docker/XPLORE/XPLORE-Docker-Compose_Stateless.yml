@@ -1,0 +1,52 @@
+version: '3'
+services:
+  indexserver:
+    image: registry.opentext.com/dctm-xplore-indexserver:${VERSION} #replace with your actual indexserver image tag here
+    hostname: indexserver
+    ports:
+      - "9300:9300"
+    volumes:
+      - xplore:/opt/xPlore/rtdata
+  indexagent:
+    image: registry.opentext.com/dctm-xplore-indexagent:${VERSION} #replace with your actual indexagent image tag here
+    hostname: indexagent
+    ports:
+      - "9200:9200"
+    environment:
+      - ess_host=indexserver
+      - docbase_name=${REP} #replace with actual value
+      - docbase_user=dmadmin #replace with actual value
+      - docbase_password=dmadmin #replace with actual value
+      - broker_host=${IP} #replace with actual value
+      - broker_port=1489 #replace with actual value
+      - registry_name=${REP} #replace with actual value
+      - registry_user=dm_bof_registry #replace with actual value
+      - registry_password=dmadmin #replace with actual value
+    depends_on:
+      - indexserver
+    volumes:
+      - xplore:/opt/xPlore/rtdata
+  cps:
+    image: registry.opentext.com/dctm-xplore-cps:${VERSION} #replace with your actual cps image tag here
+    hostname: cps
+    environment:
+      - ess_host=indexserver
+    depends_on:
+      - indexserver
+    volumes:
+      - xplore:/opt/xPlore/rtdata
+  cps1:
+    image: registry.opentext.com/dctm-xplore-cps:${VERSION} #replace with your actual cps image tag here
+    hostname: cps1
+    environment:
+      - ess_host=indexserver
+    depends_on:
+      - indexserver
+    volumes:
+      - xplore:/opt/xPlore/rtdata
+volumes:
+  xplore:
+networks:
+  default:
+    external:
+      name: documentum

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="On explicit save action" serverName="Docker_centos7">
+  <component name="PublishConfigData" autoUpload="On explicit save action" serverName="Docker_curso">
     <serverData>
       <paths name="170.zonacnc.dev">
         <serverdata>
@@ -20,6 +20,13 @@
         <serverdata>
           <mappings>
             <mapping deploy="/home/dmadmin/DCTM" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Docker_curso">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/DCTM" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

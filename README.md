@@ -46,6 +46,8 @@ DFS 22.2.0
 
 CS 22.1.0
 DA 22.1.0
+DFS 22.1.0
+XPLORE 22.1.0
 
 CS 21.1.0
 DA 21.1.0 NO FUNCIONA - Redesplegar DA v21.2.0 - v22.2.0
